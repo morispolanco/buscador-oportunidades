@@ -74,12 +74,12 @@ const responseSchema = {
 export async function generateOpportunities(industry: string, country: string): Promise<ApiBusinessOpportunity[]> {
     const prompt = `
         Eres un analista de negocios experto y arquitecto de soluciones de IA especializado en Modelos de Lenguaje Grandes (LLM).
-        Tu tarea es identificar 10 oportunidades de negocio distintas dentro de la industria '${industry}' en '${country}'.
+        Tu tarea es identificar 10 oportunidades de negocio distintas dentro de la industria '${industry}' en '${country}', enfocándote exclusivamente en aquellas con una 'Alta' probabilidad de aceptación.
 
         Para cada una de las 10 oportunidades, debes realizar el siguiente análisis:
-        1.  **Identificar Tipo de Negocio:** Nombra un tipo específico de negocio o empresa.
+        1.  **Identificar Tipo de Negocio:** Nombra un tipo específico de negocio o empresa que probablemente tenga los recursos y la mentalidad innovadora para adoptar una solución de IA.
         2.  **Obtener Correo Electrónico:** Proporciona una dirección de correo electrónico dirigida a una persona específica, como el gerente, propietario o director (p. ej., 'nombre.apellido@ejemplonegocio.com'). **Evita estrictamente direcciones genéricas** como 'info@...', 'contacto@...', 'ventas@...' o similares. El objetivo es contactar a un individuo responsable.
-        3.  **Determinar Necesidad Urgente:** Identifica el problema empresarial más crítico y urgente que enfrenta este tipo de empresa. Sé específico y céntrate en un punto de dolor de alto impacto.
+        3.  **Determinar Necesidad Urgente:** Identifica el problema empresarial más crítico y urgente que enfrenta este tipo de empresa. Sé específico y céntrate en un punto de dolor de alto impacto que justifique una inversión en tecnología.
         4.  **Proponer Solución de IA Basada en LLM:** Diseña una solución específica que utilice un Modelo de Lenguaje Grande (LLM) para resolver esa necesidad. La solución debe ser práctica y realizable con tecnologías LLM actuales (ej. chatbots, análisis de texto, generación de contenido, sistemas de preguntas y respuestas). Considera que el LLM podría necesitar acceder a datos privados del cliente (como bases de datos de productos, historiales de clientes, documentos internos) para dar respuestas más precisas y personalizadas. Dale a la solución un nombre creativo y una breve descripción.
         5.  **Generar Prompt de Desarrollo para LLM:** Crea un prompt detallado para un desarrollador de software. Este prompt debe describir cómo construir la aplicación de IA utilizando un LLM. Debe especificar el rol del LLM, qué datos específicos del cliente podría necesitar para ser efectivo (si aplica) y las funcionalidades clave.
         6.  **Redactar Correo de Propuesta:** Crea un objeto JSON con 'subject' y 'body' para un correo electrónico persuasivo dirigido al gerente.
@@ -95,9 +95,9 @@ export async function generateOpportunities(industry: string, country: string): 
                     Atentamente,
                     Moris Polanco, CEO
                     https://soluciones-a-la-medida.base44.app/
-        7.  **Asignar Probabilidad de Aceptación:** Evalúa la probabilidad de que este tipo de negocio acepte la propuesta. Basa tu evaluación en su poder adquisitivo típico y su capacidad o necesidad de innovación. Asigna una calificación ('Alta', 'Media', 'Baja') y proporciona una breve justification.
+        7.  **Asignar Probabilidad de Aceptación:** Asigna la calificación 'Alta'. Proporciona una breve justificación que explique por qué este tipo de negocio tiene un alto poder adquisitivo y una gran necesidad de innovación, haciendo que la propuesta sea muy atractiva para ellos.
 
-        Devuelve toda la salida como un único array JSON válido de 10 objetos, conforme al esquema proporcionado. No incluyas ningún texto introductorio, formato markdown o cualquier contenido fuera del array JSON.
+        Devuelve toda la salida como un único array JSON válido de 10 objetos, conforme al esquema proporcionado. Es crucial que todos los objetos en el array tengan el campo 'rating' dentro de 'acceptanceProbability' establecido en 'Alta'. No incluyas ningún texto introductorio, formato markdown o cualquier contenido fuera del array JSON.
     `;
 
     try {
