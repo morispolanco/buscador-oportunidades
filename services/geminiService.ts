@@ -46,7 +46,7 @@ const responseSchema = {
                     },
                     body: {
                         type: Type.STRING,
-                        description: "El cuerpo completo del correo electrónico. Debe presentar el problema (la necesidad urgente), proponer la solución de IA, explicar brevemente sus beneficios y terminar con una llamada a la acción clara. Debe estar firmado por 'Moris Polanco, CEO' con la URL 'https://soluciones-a-la-medida.base44.app/'."
+                        description: "El cuerpo completo del correo electrónico, dividido en párrafos cortos para facilitar la lectura. Debe presentar el problema (la necesidad urgente), proponer la solución de IA, explicar brevemente sus beneficios y terminar con una llamada a la acción clara. Debe estar firmado por 'Moris Polanco, CEO' con la URL 'https://soluciones-a-la-medida.base44.app/'."
                     }
                 },
                 required: ["subject", "body"]
@@ -90,11 +90,12 @@ export async function generateOpportunities(industry: string, country: string): 
                 c.  Explicar los beneficios clave.
                 d.  Concluir con una llamada a la acción clara para programar una reunión.
                 e.  Mantener un tono de consultor experto, no de vendedor genérico.
-                f.  Finalizar el correo con la siguiente firma, exactamente como se indica:
+                f.  Estructurar el cuerpo en párrafos cortos y claros para facilitar la lectura. Usa saltos de línea para separar los párrafos.
+                g.  Finalizar el correo con la siguiente firma, exactamente como se indica:
                     Atentamente,
                     Moris Polanco, CEO
                     https://soluciones-a-la-medida.base44.app/
-        7.  **Asignar Probabilidad de Aceptación:** Evalúa la probabilidad de que este tipo de negocio acepte la propuesta. Basa tu evaluación en su poder adquisitivo típico y su capacidad o necesidad de innovación. Asigna una calificación ('Alta', 'Media', 'Baja') y proporciona una breve justificación.
+        7.  **Asignar Probabilidad de Aceptación:** Evalúa la probabilidad de que este tipo de negocio acepte la propuesta. Basa tu evaluación en su poder adquisitivo típico y su capacidad o necesidad de innovación. Asigna una calificación ('Alta', 'Media', 'Baja') y proporciona una breve justification.
 
         Devuelve toda la salida como un único array JSON válido de 10 objetos, conforme al esquema proporcionado. No incluyas ningún texto introductorio, formato markdown o cualquier contenido fuera del array JSON.
     `;
