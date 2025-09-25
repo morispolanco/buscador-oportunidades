@@ -51,16 +51,30 @@ const OpportunityCard: React.FC<OpportunityCardProps> = ({ opportunity, index, o
 
   return (
     <div className={`bg-gradient-to-br ${colorClass} p-6 rounded-2xl shadow-lg border border-gray-700/50 flex flex-col space-y-4 transition-all duration-300 hover:shadow-cyan-500/10 hover:border-cyan-500/50`}>
-      <h3 className="text-xl font-bold text-cyan-300 tracking-wide">{opportunity.businessType}</h3>
+      <div>
+        <p className="text-sm font-semibold text-purple-400 tracking-wider uppercase">{opportunity.sector}</p>
+        <h3 className="text-xl font-bold text-cyan-300 tracking-wide">{opportunity.businessType}</h3>
+      </div>
 
       <div className="space-y-2">
         <div className="flex items-center space-x-3">
             <h4 className="font-semibold text-gray-200 text-sm">Probabilidad de Aceptación:</h4>
             <span className={`px-2.5 py-0.5 text-xs font-semibold rounded-full border ${getProbabilityBadgeColor(opportunity.acceptanceProbability.rating)}`}>
-                {opportunity.acceptanceProbability.rating}
+                {opportunity.acceptanceProbability.rating} ({opportunity.acceptanceProbability.score}/10)
             </span>
         </div>
         <p className="text-sm text-gray-400 italic">"{opportunity.acceptanceProbability.justification}"</p>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4 text-sm">
+        <div className="flex flex-col items-center bg-gray-800/50 p-2 rounded-lg text-center">
+            <span className="font-semibold text-gray-400 text-xs">Facilidad de Creación</span>
+            <span className="text-lg font-bold text-cyan-300">{opportunity.easeOfCreation}/10</span>
+        </div>
+        <div className="flex flex-col items-center bg-gray-800/50 p-2 rounded-lg text-center">
+            <span className="font-semibold text-gray-400 text-xs">Oportunidad de Ganancia</span>
+            <span className="text-lg font-bold text-green-300">{opportunity.opportunityForGain}/10</span>
+        </div>
       </div>
       
       <div className="flex items-center space-x-2 text-sm text-purple-300">

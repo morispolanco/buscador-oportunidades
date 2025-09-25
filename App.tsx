@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { generateOpportunities } from './services/geminiService';
 import { AppState } from './types';
 import type { BusinessOpportunity, ApiBusinessOpportunity } from './types';
@@ -93,22 +93,86 @@ const App: React.FC = () => {
     });
   }, []);
 
+  const handleExportToCSV = useCallback(() => {
+    if (opportunities.length === 0) return;
+
+    const scoredOpportunities = opportunities.map(opp => {
+        const totalScore = opp.easeOfCreation + opp.opportunityForGain + opp.acceptanceProbability.score;
+        return { ...opp, totalScore };
+    }).sort((a, b) => b.totalScore - a.totalScore);
+
+    const headers = [
+        'Sector',
+        'Tipo de Negocio',
+        'Facilidad de Creación (1-10)',
+        'Oportunidad de Ganancia (1-10)',
+        'Probabilidad de Aceptación (1-10)',
+        'Puntuación Total (Recomendación)',
+        'Nombre de la Solución IA',
+        'Necesidad Urgente'
+    ];
+
+    const rows = scoredOpportunities.map(opp => [
+        `"${opp.sector.replace(/"/g, '""')}"`,
+        `"${opp.businessType.replace(/"/g, '""')}"`,
+        opp.easeOfCreation,
+        opp.opportunityForGain,
+        opp.acceptanceProbability.score,
+        opp.totalScore,
+        `"${opp.aiSolutionName.replace(/"/g, '""')}"`,
+        `"${opp.urgentNeed.replace(/"/g, '""')}"`
+    ]);
+
+    const csvContent = "data:text/csv;charset=utf-8," 
+        + headers.join(",") + "\n" 
+        + rows.map(e => e.join(",")).join("\n");
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "tabla_comparativa_propuestas.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }, [opportunities]);
+  
+  const groupedOpportunities = useMemo(() => {
+    // FIX: Replaced `reduce` with a standard `for...of` loop to improve type inference and avoid the 'map' of 'unknown' error.
+    const groups: Record<string, BusinessOpportunity[]> = {};
+    for (const opp of opportunities) {
+      const sector = opp.sector || 'Sin Sector';
+      if (!groups[sector]) {
+        groups[sector] = [];
+      }
+      groups[sector].push(opp);
+    }
+    return groups;
+  }, [opportunities]);
+
+
   const renderContent = () => {
     switch (appState) {
       case AppState.LOADING:
         return <Loader />;
       case AppState.SUCCESS:
         return (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-8">
-            {opportunities.map((opp, index) => (
-              <OpportunityCard 
-                key={index} 
-                opportunity={opp} 
-                index={index}
-                onTrackingChange={handleTrackingChange}
-              />
+          <>
+            {Object.entries(groupedOpportunities).map(([sector, opps]) => (
+              <div key={sector} className="mb-12">
+                <h2 className="text-3xl font-bold text-purple-400 mb-6 border-b-2 border-purple-800 pb-2 capitalize">{sector}</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-8">
+                  {opps.map((opp, index) => (
+                    <OpportunityCard
+                      key={`${sector}-${opp.businessType}-${index}`}
+                      opportunity={opp}
+                      index={opportunities.indexOf(opp)}
+                      onTrackingChange={handleTrackingChange}
+                    />
+                  ))}
+                </div>
+              </div>
             ))}
-          </div>
+          </>
         );
       case AppState.ERROR:
         return error && <ErrorMessage message={error} />;
@@ -190,6 +254,20 @@ const App: React.FC = () => {
           </form>
         </div>
         
+        {appState === AppState.SUCCESS && opportunities.length > 0 && (
+          <div className="text-center mb-10">
+            <button
+              onClick={handleExportToCSV}
+              className="font-semibold py-2 px-5 rounded-lg bg-gradient-to-r from-teal-500 to-green-600 hover:from-teal-400 hover:to-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-teal-400 transition-all duration-300 flex items-center justify-center mx-auto"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                </svg>
+              Exportar Tabla Comparativa (.csv)
+            </button>
+          </div>
+        )}
+
         <div className="mt-8">
           {renderContent()}
         </div>

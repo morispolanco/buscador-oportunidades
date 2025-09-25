@@ -6,10 +6,12 @@ export interface ProposalEmail {
 export interface AcceptanceProbability {
   rating: 'Alta' | 'Media' | 'Baja';
   justification: string;
+  score: number; // Score from 1-10
 }
 
 // Data shape from Gemini API
 export interface ApiBusinessOpportunity {
+  sector: string;
   businessType: string;
   urgentNeed: string;
   aiSolutionName: string;
@@ -18,6 +20,8 @@ export interface ApiBusinessOpportunity {
   managerEmail: string;
   proposalEmail: ProposalEmail;
   acceptanceProbability: AcceptanceProbability;
+  easeOfCreation: number; // Score from 1-10
+  opportunityForGain: number; // Score from 1-10
 }
 
 // Data shape used in the React components, including tracking state
