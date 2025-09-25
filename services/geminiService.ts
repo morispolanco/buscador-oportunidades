@@ -18,7 +18,7 @@ const responseSchema = {
             },
             managerEmail: {
                 type: Type.STRING,
-                description: "La dirección de correo electrónico del gerente, propietario o persona a cargo del negocio. Puede ser un correo electrónico plausible o genérico si no se encuentra uno real (por ejemplo, 'contacto@nombreempresa.com')."
+                description: "La dirección de correo electrónico de una persona específica como el gerente, propietario o director del negocio. No debe ser una dirección genérica como 'info@' o 'contacto@'. Por ejemplo: 'nombre.apellido@empresa.com'."
             },
             urgentNeed: {
                 type: Type.STRING,
@@ -78,7 +78,7 @@ export async function generateOpportunities(industry: string, country: string): 
 
         Para cada una de las 10 oportunidades, debes realizar el siguiente análisis:
         1.  **Identificar Tipo de Negocio:** Nombra un tipo específico de negocio o empresa.
-        2.  **Obtener Correo Electrónico:** Proporciona una dirección de correo electrónico plausible para el gerente, propietario o persona a cargo. Si no se puede encontrar un correo real, crea uno genérico pero realista (por ejemplo, 'contacto@ejemplonegocio.com' o 'gerencia@ejemplonegocio.es').
+        2.  **Obtener Correo Electrónico:** Proporciona una dirección de correo electrónico dirigida a una persona específica, como el gerente, propietario o director (p. ej., 'nombre.apellido@ejemplonegocio.com'). **Evita estrictamente direcciones genéricas** como 'info@...', 'contacto@...', 'ventas@...' o similares. El objetivo es contactar a un individuo responsable.
         3.  **Determinar Necesidad Urgente:** Identifica el problema empresarial más crítico y urgente que enfrenta este tipo de empresa. Sé específico y céntrate en un punto de dolor de alto impacto.
         4.  **Proponer Solución de IA Basada en LLM:** Diseña una solución específica que utilice un Modelo de Lenguaje Grande (LLM) para resolver esa necesidad. La solución debe ser práctica y realizable con tecnologías LLM actuales (ej. chatbots, análisis de texto, generación de contenido, sistemas de preguntas y respuestas). Considera que el LLM podría necesitar acceder a datos privados del cliente (como bases de datos de productos, historiales de clientes, documentos internos) para dar respuestas más precisas y personalizadas. Dale a la solución un nombre creativo y una breve descripción.
         5.  **Generar Prompt de Desarrollo para LLM:** Crea un prompt detallado para un desarrollador de software. Este prompt debe describir cómo construir la aplicación de IA utilizando un LLM. Debe especificar el rol del LLM, qué datos específicos del cliente podría necesitar para ser efectivo (si aplica) y las funcionalidades clave.
