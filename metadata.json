@@ -1,0 +1,6 @@
+
+{
+  "name": "Buscador de Oportunidades de Negocio IA",
+  "description": "Una aplicación para automatizar la identificación de oportunidades de negocio y proponer soluciones de IA a medida. Los usuarios ingresan una industria y un país, y la aplicación genera contactos comerciales potenciales, identifica sus necesidades críticas y propone aplicaciones de IA específicas para resolverlas, incluida la generación de prompts de desarrollo.",
+  "requestFramePermissions": []
+}
