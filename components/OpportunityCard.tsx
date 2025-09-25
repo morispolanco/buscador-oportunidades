@@ -36,9 +36,32 @@ const OpportunityCard: React.FC<OpportunityCardProps> = ({ opportunity, index, o
   
   const mailtoHref = `mailto:${opportunity.managerEmail}?subject=${encodeURIComponent(opportunity.proposalEmail.subject)}&body=${encodeURIComponent(opportunity.proposalEmail.body)}`;
 
+  const getProbabilityBadgeColor = (rating: 'Alta' | 'Media' | 'Baja') => {
+    switch (rating) {
+      case 'Alta':
+        return 'bg-green-500/20 text-green-300 border-green-500/30';
+      case 'Media':
+        return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30';
+      case 'Baja':
+        return 'bg-red-500/20 text-red-300 border-red-500/30';
+      default:
+        return 'bg-gray-500/20 text-gray-300 border-gray-500/30';
+    }
+  };
+
   return (
     <div className={`bg-gradient-to-br ${colorClass} p-6 rounded-2xl shadow-lg border border-gray-700/50 flex flex-col space-y-4 transition-all duration-300 hover:shadow-cyan-500/10 hover:border-cyan-500/50`}>
       <h3 className="text-xl font-bold text-cyan-300 tracking-wide">{opportunity.businessType}</h3>
+
+      <div className="space-y-2">
+        <div className="flex items-center space-x-3">
+            <h4 className="font-semibold text-gray-200 text-sm">Probabilidad de Aceptación:</h4>
+            <span className={`px-2.5 py-0.5 text-xs font-semibold rounded-full border ${getProbabilityBadgeColor(opportunity.acceptanceProbability.rating)}`}>
+                {opportunity.acceptanceProbability.rating}
+            </span>
+        </div>
+        <p className="text-sm text-gray-400 italic">"{opportunity.acceptanceProbability.justification}"</p>
+      </div>
       
       <div className="flex items-center space-x-2 text-sm text-purple-300">
         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

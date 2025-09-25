@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { generateOpportunities } from './services/geminiService';
 import { AppState } from './types';
 import type { BusinessOpportunity, ApiBusinessOpportunity } from './types';
@@ -6,12 +6,32 @@ import OpportunityCard from './components/OpportunityCard';
 import Loader from './components/Loader';
 import ErrorMessage from './components/ErrorMessage';
 
+const LOCAL_STORAGE_KEY = 'ai_business_opportunities';
+
 const App: React.FC = () => {
   const [industry, setIndustry] = useState('');
   const [country, setCountry] = useState('');
-  const [opportunities, setOpportunities] = useState<BusinessOpportunity[]>([]);
-  const [appState, setAppState] = useState<AppState>(AppState.IDLE);
+  
+  const [opportunities, setOpportunities] = useState<BusinessOpportunity[]>(() => {
+    try {
+      const savedOpps = window.localStorage.getItem(LOCAL_STORAGE_KEY);
+      return savedOpps ? JSON.parse(savedOpps) : [];
+    } catch (error) {
+      console.error("Error reading from localStorage", error);
+      return [];
+    }
+  });
+
+  const [appState, setAppState] = useState<AppState>(opportunities.length > 0 ? AppState.SUCCESS : AppState.IDLE);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(opportunities));
+    } catch (error) {
+      console.error("Error writing to localStorage", error);
+    }
+  }, [opportunities]);
 
   const handleGenerate = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();

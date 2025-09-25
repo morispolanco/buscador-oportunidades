@@ -50,18 +50,33 @@ const responseSchema = {
                     }
                 },
                 required: ["subject", "body"]
+            },
+            acceptanceProbability: {
+                type: Type.OBJECT,
+                description: "Un índice que estima la probabilidad de que la propuesta sea aceptada por el negocio.",
+                properties: {
+                    rating: {
+                        type: Type.STRING,
+                        description: "La probabilidad de aceptación. Debe ser uno de: 'Alta', 'Media', 'Baja'."
+                    },
+                    justification: {
+                        type: Type.STRING,
+                        description: "Una breve justificación para la calificación de probabilidad, basada en el poder adquisitivo o la capacidad innovadora del tipo de negocio."
+                    }
+                },
+                required: ["rating", "justification"]
             }
         },
-        required: ["businessType", "managerEmail", "urgentNeed", "aiSolutionName", "aiSolutionDescription", "appCreationPrompt", "proposalEmail"],
+        required: ["businessType", "managerEmail", "urgentNeed", "aiSolutionName", "aiSolutionDescription", "appCreationPrompt", "proposalEmail", "acceptanceProbability"],
     },
 };
 
 export async function generateOpportunities(industry: string, country: string): Promise<ApiBusinessOpportunity[]> {
     const prompt = `
         Eres un analista de negocios experto y arquitecto de soluciones de IA especializado en Modelos de Lenguaje Grandes (LLM).
-        Tu tarea es identificar 20 oportunidades de negocio distintas dentro de la industria '${industry}' en '${country}'.
+        Tu tarea es identificar 10 oportunidades de negocio distintas dentro de la industria '${industry}' en '${country}'.
 
-        Para cada una de las 20 oportunidades, debes realizar el siguiente análisis:
+        Para cada una de las 10 oportunidades, debes realizar el siguiente análisis:
         1.  **Identificar Tipo de Negocio:** Nombra un tipo específico de negocio o empresa.
         2.  **Obtener Correo Electrónico:** Proporciona una dirección de correo electrónico plausible para el gerente, propietario o persona a cargo. Si no se puede encontrar un correo real, crea uno genérico pero realista (por ejemplo, 'contacto@ejemplonegocio.com' o 'gerencia@ejemplonegocio.es').
         3.  **Determinar Necesidad Urgente:** Identifica el problema empresarial más crítico y urgente que enfrenta este tipo de empresa. Sé específico y céntrate en un punto de dolor de alto impacto.
@@ -75,8 +90,9 @@ export async function generateOpportunities(industry: string, country: string): 
                 c.  Explicar los beneficios clave.
                 d.  Concluir con una llamada a la acción clara para programar una reunión.
                 e.  Mantener un tono de consultor experto, no de vendedor genérico.
+        7.  **Asignar Probabilidad de Aceptación:** Evalúa la probabilidad de que este tipo de negocio acepte la propuesta. Basa tu evaluación en su poder adquisitivo típico y su capacidad o necesidad de innovación. Asigna una calificación ('Alta', 'Media', 'Baja') y proporciona una breve justificación.
 
-        Devuelve toda la salida como un único array JSON válido de 20 objetos, conforme al esquema proporcionado. No incluyas ningún texto introductorio, formato markdown o cualquier contenido fuera del array JSON.
+        Devuelve toda la salida como un único array JSON válido de 10 objetos, conforme al esquema proporcionado. No incluyas ningún texto introductorio, formato markdown o cualquier contenido fuera del array JSON.
     `;
 
     try {

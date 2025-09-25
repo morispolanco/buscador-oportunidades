@@ -3,6 +3,11 @@ export interface ProposalEmail {
   body: string;
 }
 
+export interface AcceptanceProbability {
+  rating: 'Alta' | 'Media' | 'Baja';
+  justification: string;
+}
+
 // Data shape from Gemini API
 export interface ApiBusinessOpportunity {
   businessType: string;
@@ -12,6 +17,7 @@ export interface ApiBusinessOpportunity {
   appCreationPrompt: string;
   managerEmail: string;
   proposalEmail: ProposalEmail;
+  acceptanceProbability: AcceptanceProbability;
 }
 
 // Data shape used in the React components, including tracking state
